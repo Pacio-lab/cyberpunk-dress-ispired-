@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NIGHT CITY WEARABLES — Real World Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cyan: #00f5ff;
+    --yellow: #f5e642;
+    --magenta: #ff2d78;
+    --orange: #ff6b1a;
+    --deep: #050508;
+    --dark: #0a0a12;
+    --card: #0d0d1a;
+    --border: rgba(0,245,255,0.15);
+    --text: #c8d8e8;
+    --dim: #5a6a7a;
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+background: var(–deep);
+color: var(–text);
+font-family: ‘Rajdhani’, sans-serif;
+overflow-x: hidden;
+cursor: crosshair;
+}
+
+/* SCANLINES OVERLAY */
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background: repeating-linear-gradient(
+0deg,
+transparent,
+transparent 2px,
+rgba(0,0,0,0.08) 2px,
+rgba(0,0,0,0.08) 4px
+);
+pointer-events: none;
+z-index: 9999;
+}
+
+/* NOISE TEXTURE */
+body::after {
+content: ‘’;
+position: fixed;
+inset: 0;
+background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.04’/%3E%3C/svg%3E”);
+pointer-events: none;
+z-index: 9998;
+opacity: 0.5;
+}
+
+/* HEADER */
+header {
+position: relative;
+text-align: center;
+padding: 80px 20px 60px;
+border-bottom: 1px solid var(–border);
+overflow: hidden;
+}
+
+header .bg-grid {
+position: absolute;
+inset: 0;
+background-image:
+linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+background-size: 40px 40px;
+animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+0% { background-position: 0 0; }
+100% { background-position: 40px 40px; }
+}
+
+.header-tag {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 11px;
+letter-spacing: 4px;
+color: var(–cyan);
+text-transform: uppercase;
+margin-bottom: 16px;
+opacity: 0.7;
+}
+
+h1 {
+font-family: ‘Orbitron’, sans-serif;
+font-size: clamp(32px, 7vw, 90px);
+font-weight: 900;
+line-height: 0.9;
+letter-spacing: -2px;
+color: #fff;
+text-shadow:
+0 0 20px var(–cyan),
+0 0 60px rgba(0,245,255,0.3);
+position: relative;
+z-index: 1;
+}
+
+h1 .accent { color: var(–yellow); text-shadow: 0 0 30px var(–yellow); }
+
+.glitch-bar {
+width: 120px;
+height: 3px;
+background: linear-gradient(90deg, var(–magenta), var(–cyan));
+margin: 24px auto;
+position: relative;
+z-index: 1;
+}
+
+.subtitle {
+font-size: 16px;
+letter-spacing: 6px;
+color: var(–dim);
+text-transform: uppercase;
+position: relative;
+z-index: 1;
+}
+
+/* COLLECTION STRIP */
+.collection-strip {
+background: var(–yellow);
+padding: 10px 0;
+overflow: hidden;
+white-space: nowrap;
+}
+
+.collection-strip span {
+font-family: ‘Orbitron’, sans-serif;
+font-size: 11px;
+font-weight: 700;
+letter-spacing: 3px;
+color: #000;
+text-transform: uppercase;
+animation: marquee 25s linear infinite;
+display: inline-block;
+}
+
+@keyframes marquee {
+0% { transform: translateX(0); }
+100% { transform: translateX(-50%); }
+}
+
+/* MAIN GRID */
+main {
+max-width: 1400px;
+margin: 0 auto;
+padding: 60px 20px;
+}
+
+.section-label {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 11px;
+letter-spacing: 4px;
+color: var(–magenta);
+text-transform: uppercase;
+margin-bottom: 40px;
+display: flex;
+align-items: center;
+gap: 16px;
+}
+
+.section-label::after {
+content: ‘’;
+flex: 1;
+height: 1px;
+background: linear-gradient(90deg, var(–magenta), transparent);
+}
+
+/* OUTFIT CARDS */
+.outfit-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+gap: 2px;
+margin-bottom: 80px;
+}
+
+.outfit-card {
+background: var(–card);
+border: 1px solid var(–border);
+padding: 36px;
+position: relative;
+overflow: hidden;
+transition: transform 0.3s ease, border-color 0.3s ease;
+cursor: pointer;
+}
+
+.outfit-card::before {
+content: ‘’;
+position: absolute;
+top: 0; left: 0; right: 0;
+height: 2px;
+background: linear-gradient(90deg, transparent, var(–accent, var(–cyan)), transparent);
+}
+
+.outfit-card:hover {
+transform: translateY(-4px);
+border-color: var(–accent, var(–cyan));
+box-shadow: 0 0 40px rgba(0,245,255,0.08);
+}
+
+.outfit-card .card-num {
+font-family: ‘Orbitron’, sans-serif;
+font-size: 48px;
+font-weight: 900;
+color: var(–accent, var(–cyan));
+opacity: 0.12;
+position: absolute;
+top: 20px; right: 24px;
+line-height: 1;
+}
+
+.outfit-card .outfit-tag {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 10px;
+letter-spacing: 3px;
+color: var(–accent, var(–cyan));
+text-transform: uppercase;
+margin-bottom: 16px;
+opacity: 0.7;
+}
+
+.outfit-card h2 {
+font-family: ‘Orbitron’, sans-serif;
+font-size: 20px;
+font-weight: 700;
+color: #fff;
+margin-bottom: 6px;
+line-height: 1.2;
+}
+
+.outfit-card .character {
+font-size: 12px;
+color: var(–accent, var(–cyan));
+letter-spacing: 2px;
+text-transform: uppercase;
+margin-bottom: 24px;
+opacity: 0.8;
+}
+
+/* VISUAL SILHOUETTE */
+.silhouette {
+width: 100%;
+height: 220px;
+margin-bottom: 28px;
+position: relative;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.sil-bg {
+position: absolute;
+inset: 0;
+border-radius: 2px;
+opacity: 0.06;
+}
+
+.sil-figure {
+position: relative;
+z-index: 1;
+width: 80px;
+}
+
+/* ITEMS LIST */
+.items-list {
+list-style: none;
+margin-bottom: 28px;
+}
+
+.items-list li {
+padding: 10px 0;
+border-bottom: 1px solid rgba(255,255,255,0.05);
+display: grid;
+grid-template-columns: auto 1fr auto;
+gap: 12px;
+align-items: start;
+font-size: 14px;
+}
+
+.items-list li:last-child { border-bottom: none; }
+
+.item-icon {
+font-size: 16px;
+opacity: 0.8;
+margin-top: 1px;
+}
+
+.item-info { flex: 1; }
+
+.item-name {
+color: #fff;
+font-weight: 600;
+font-size: 14px;
+display: block;
+margin-bottom: 2px;
+}
+
+.item-detail {
+font-size: 12px;
+color: var(–dim);
+font-family: ‘Share Tech Mono’, monospace;
+line-height: 1.5;
+}
+
+.item-material {
+font-size: 11px;
+color: var(–accent, var(–cyan));
+text-align: right;
+white-space: nowrap;
+opacity: 0.8;
+}
+
+/* TAGS */
+.tag-row {
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+margin-top: 20px;
+}
+
+.tag {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 10px;
+letter-spacing: 1px;
+padding: 4px 10px;
+border: 1px solid var(–accent, var(–cyan));
+color: var(–accent, var(–cyan));
+text-transform: uppercase;
+opacity: 0.6;
+}
+
+.price-row {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-top: 24px;
+padding-top: 20px;
+border-top: 1px solid var(–border);
+}
+
+.price-label {
+font-size: 11px;
+letter-spacing: 2px;
+color: var(–dim);
+text-transform: uppercase;
+}
+
+.price-val {
+font-family: ‘Orbitron’, sans-serif;
+font-size: 18px;
+font-weight: 700;
+color: var(–accent, var(–cyan));
+text-shadow: 0 0 15px currentColor;
+}
+
+/* GLITCH ANIMATION */
+@keyframes glitch {
+0%, 94%, 100% { clip-path: none; transform: none; }
+95% { clip-path: inset(20% 0 60% 0); transform: translateX(-4px); }
+97% { clip-path: inset(50% 0 20% 0); transform: translateX(4px); }
+}
+
+/* FOOTER */
+footer {
+border-top: 1px solid var(–border);
+padding: 40px 20px;
+text-align: center;
+}
+
+.footer-logo {
+font-family: ‘Orbitron’, sans-serif;
+font-size: 12px;
+font-weight: 700;
+letter-spacing: 6px;
+color: var(–dim);
+text-transform: uppercase;
+}
+
+.footer-sub {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 10px;
+color: rgba(90,106,122,0.5);
+margin-top: 8px;
+letter-spacing: 2px;
+}
+
+/* ACCENT COLORS PER CARD */
+.card-cyan { –accent: #00f5ff; }
+.card-yellow { –accent: #f5e642; }
+.card-magenta { –accent: #ff2d78; }
+.card-orange { –accent: #ff6b1a; }
+.card-green { –accent: #39ff14; }
+.card-purple { –accent: #bf5fff; }
+
+.card-yellow .sil-bg { background: var(–yellow); }
+.card-cyan .sil-bg { background: var(–cyan); }
+.card-magenta .sil-bg { background: var(–magenta); }
+.card-orange .sil-bg { background: var(–orange); }
+.card-green .sil-bg { background: #39ff14; }
+.card-purple .sil-bg { background: #bf5fff; }
+
+/* FEATURED BANNER */
+.featured {
+grid-column: 1 / -1;
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 0;
+}
+
+@media (max-width: 700px) {
+.featured { grid-template-columns: 1fr; }
+.outfit-grid { grid-template-columns: 1fr; }
+}
+
+.featured-left {
+background: linear-gradient(135deg, #0a0020, #050508);
+padding: 60px 50px;
+border: 1px solid rgba(191,95,255,0.3);
+position: relative;
+overflow: hidden;
+}
+
+.featured-left::after {
+content: ‘V’;
+position: absolute;
+bottom: -30px;
+right: -10px;
+font-family: ‘Orbitron’, sans-serif;
+font-size: 200px;
+font-weight: 900;
+color: rgba(191,95,255,0.06);
+line-height: 1;
+}
+
+.featured-right {
+background: linear-gradient(135deg, #0a0008, #050508);
+padding: 60px 50px;
+border: 1px solid rgba(255,45,120,0.3);
+position: relative;
+overflow: hidden;
+}
+
+.featured-right::after {
+content: ‘◆’;
+position: absolute;
+bottom: -20px;
+right: 20px;
+font-size: 180px;
+color: rgba(255,45,120,0.04);
+line-height: 1;
+}
+
+/* INTRO SECTION */
+.intro {
+max-width: 900px;
+margin: 0 auto 80px;
+text-align: center;
+padding: 0 20px;
+}
+
+.intro p {
+font-size: 17px;
+line-height: 1.7;
+color: var(–dim);
+letter-spacing: 0.5px;
+}
+
+.intro strong { color: var(–cyan); font-weight: 600; }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bg-grid"></div>
+  <div class="header-tag">// NIGHT CITY WEARABLES — COLLEZIONE 2077 //</div>
+  <h1>CYBER<span class="accent">PUNK</span><br>FASHION</h1>
+  <div class="glitch-bar"></div>
+  <div class="subtitle">Real World Edition — Vestiario Funzionale da Night City</div>
+</header>
+
+<div class="collection-strip">
+  <span>✦ CORPO MEGATECH ✦ MILITECH FABRICS ✦ ARASAKA STYLE ✦ NOMAD SURPLUS ✦ MAELSTROM CHROME ✦ VALENTINOS THREADS ✦ TRAUMA TEAM GEAR ✦ CORPO MEGATECH ✦ MILITECH FABRICS ✦ ARASAKA STYLE ✦ NOMAD SURPLUS ✦ MAELSTROM CHROME ✦ VALENTINOS THREADS ✦ TRAUMA TEAM GEAR ✦ </span>
+</div>
+
+<main>
+
+  <div class="intro">
+    <p>
+      Ogni capo è una <strong>traduzione reale</strong> dei look iconici di Night City —
+      materiali esistenti, brand reali, styling praticabile.
+      Non cosplay. Non fantasia. <strong>Streetwear del futuro, acquistabile oggi.</strong>
+    </p>
+  </div>
+
+  <div class="section-label">// 01 — OUTFIT PRINCIPALI</div>
+
+  <div class="outfit-grid">
+
+```
+<!-- FEATURED: V MALE + V FEMALE -->
+<div class="featured">
+
+  <div class="featured-left">
+    <div class="outfit-tag">// OUTFIT 01 — PROTAGONISTA MASCHILE</div>
+    <h2>V — MERCENARY STREETWEAR</h2>
+    <div class="character" style="color:#bf5fff;">Ispirazione: V (Maschile) — Night City Freelancer</div>
+
+    <ul class="items-list" style="--accent:#bf5fff;">
+      <li>
+        <span class="item-icon">🧥</span>
+        <div class="item-info">
+          <span class="item-name">Giubbotto Biker Tagliato</span>
+          <span class="item-detail">Pelle sintetica nera, spalle rinforzate, patch laterali fluorescenti cucite a mano. Collo alto asimmetrico. Brand reale: <em>ASOS Faux Leather / Nudie Jeans</em></span>
+        </div>
+        <span class="item-material">Eco-leather</span>
+      </li>
+      <li>
+        <span class="item-icon">👕</span>
+        <div class="item-info">
+          <span class="item-name">T-shirt Oversize Grafica</span>
+          <span class="item-detail">Stampa glitchata o circuitale su cotone pesante 250g. Tagli irregolari al bordo. Brand: <em>Rick Owens DRKSHDW / Pleasures</em></span>
+        </div>
+        <span class="item-material">100% Cotton</span>
+      </li>
+      <li>
+        <span class="item-icon">👖</span>
+        <div class="item-info">
+          <span class="item-name">Cargo Pants Tattici</span>
+          <span class="item-detail">Ripstop nero, tasconi laterali con velcro e zip, ginocchiere integrate removibili. Brand: <em>Acronym P30A / Carhartt WIP</em></span>
+        </div>
+        <span class="item-material">Ripstop Nylon</span>
+      </li>
+      <li>
+        <span class="item-icon">👢</span>
+        <div class="item-info">
+          <span class="item-name">Combat Boots con Dettagli Chrome</span>
+          <span class="item-detail">Stivale alto 20cm, punta rinforzata, fibbie metalliche cromata, suola chunky 5cm. Brand: <em>Dr. Martens 2976 / Demonia Riot</em></span>
+        </div>
+        <span class="item-material">Full-Grain Leather</span>
+      </li>
+      <li>
+        <span class="item-icon">🧤</span>
+        <div class="item-info">
+          <span class="item-name">Guanti Cut-Off con Rinforzi</span>
+          <span class="item-detail">Pelle traforata, dita scoperte, nocche protette da inserti in TPU rigido. Brand: <em>Mechanix M-Pact / Fox Racing</em></span>
+        </div>
+        <span class="item-material">Leather + TPU</span>
+      </li>
+    </ul>
+
+    <div class="tag-row">
+      <span class="tag">streetwear</span>
+      <span class="tag">tactical</span>
+      <span class="tag">dark</span>
+      <span class="tag">chrome accents</span>
+    </div>
+
+    <div class="price-row" style="--accent:#bf5fff;">
+      <span class="price-label">Budget stimato</span>
+      <span class="price-val">€ 480 – 900</span>
+    </div>
+  </div>
+
+  <div class="featured-right">
+    <div class="outfit-tag">// OUTFIT 02 — PROTAGONISTA FEMMINILE</div>
+    <h2>V — CORPO CORPO ASSASSIN</h2>
+    <div class="character" style="color:#ff2d78;">Ispirazione: V (Femminile) — High-Fashion Mercenary</div>
+
+    <ul class="items-list" style="--accent:#ff2d78;">
+      <li>
+        <span class="item-icon">🧥</span>
+        <div class="item-info">
+          <span class="item-name">Blazer Strutturato Asimmetrico</span>
+          <span class="item-detail">Corpo in neoprene nero, revers a lancia, un'unica manica in pelle con borchie a raso. Chiusura decentrata. Brand: <em>Mugler / Y/Project</em></span>
+        </div>
+        <span class="item-material">Neoprene + PU</span>
+      </li>
+      <li>
+        <span class="item-icon">👗</span>
+        <div class="item-info">
+          <span class="item-name">Bustier con Pannelli Metallici</span>
+          <span class="item-detail">Boning interno, pannelli frontali in vinile specchiato magenta/argento, zip posteriore. Brand: <em>Chromat / Poster Girl</em></span>
+        </div>
+        <span class="item-material">Vinyl + Steel Boning</span>
+      </li>
+      <li>
+        <span class="item-icon">🩲</span>
+        <div class="item-info">
+          <span class="item-name">Hot Pants Cargo Cybertech</span>
+          <span class="item-detail">Shorts tattici corti, tasconi laterali, strisce riflettenti cucite, cintura con buckle doppio. Brand: <em>Off-White / Acronym</em></span>
+        </div>
+        <span class="item-material">Nylon + Reflective</span>
+      </li>
+      <li>
+        <span class="item-icon">🦵</span>
+        <div class="item-info">
+          <span class="item-name">Calze a Rete + Legwarmers Tech</span>
+          <span class="item-detail">Collant a rete grossa nera + ghette grigie con pannelli traforati laser-cut al ginocchio. Brand: <em>Wolford / Reebok x Cottweiler</em></span>
+        </div>
+        <span class="item-material">Nylon Mesh</span>
+      </li>
+      <li>
+        <span class="item-icon">👠</span>
+        <div class="item-info">
+          <span class="item-name">Platform Ankle Boot Clear</span>
+          <span class="item-detail">Stivale trasparente PVC sopra la caviglia, zeppa platform 8cm nera, laccetti laterali. Brand: <em>Naked Wolfe / Azalea Wang</em></span>
+        </div>
+        <span class="item-material">PVC + Rubber</span>
+      </li>
+    </ul>
+
+    <div class="tag-row">
+      <span class="tag" style="border-color:#ff2d78;color:#ff2d78;">avant-garde</span>
+      <span class="tag" style="border-color:#ff2d78;color:#ff2d78;">high fashion</span>
+      <span class="tag" style="border-color:#ff2d78;color:#ff2d78;">vinyl</span>
+      <span class="tag" style="border-color:#ff2d78;color:#ff2d78;">corpo style</span>
+    </div>
+
+    <div class="price-row">
+      <span class="price-label">Budget stimato</span>
+      <span class="price-val" style="color:#ff2d78;text-shadow:0 0 15px #ff2d78;">€ 600 – 1.400</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- JOHNNY SILVERHAND -->
+<div class="outfit-card card-yellow">
+  <div class="card-num">03</div>
+  <div class="outfit-tag">// OUTFIT 03 — ROCKERBOY LEGGENDARIO</div>
+  <h2>JOHNNY SILVERHAND</h2>
+  <div class="character">Ispirazione: Keanu Reeves — Anno 2023 Punk Rock</div>
+
+  <ul class="items-list">
+    <li>
+      <span class="item-icon">🕶️</span>
+      <div class="item-info">
+        <span class="item-name">Occhiali Aviator Thin Frame</span>
+        <span class="item-detail">Montatura sottilissima in acciaio dorato o titanio, lenti specchiate ambra. Brand: <em>Ray-Ban Aviator 3025 / Moscot</em></span>
+      </div>
+      <span class="item-material">Titanium</span>
+    </li>
+    <li>
+      <span class="item-icon">🎽</span>
+      <div class="item-info">
+        <span class="item-name">Canotta Bianca Consumata</span>
+        <span class="item-detail">Tank top ribbed bianco in cotone, taglio slim, volutamente distressed. Brand: <em>John Varvatos / Helmut Lang</em></span>
+      </div>
+      <span class="item-material">Ribbed Cotton</span>
+    </li>
+    <li>
+      <span class="item-icon">🧥</span>
+      <div class="item-info">
+        <span class="item-name">Trench Coat Militare Sbottonato</span>
+        <span class="item-detail">Lungo fino al ginocchio, cotone pesante cachi/nero, portato aperto sempre. Brand: <em>Acne Studios / Saint Laurent</em></span>
+      </div>
+      <span class="item-material">Heavy Cotton</span>
+    </li>
+    <li>
+      <span class="item-icon">👖</span>
+      <div class="item-info">
+        <span class="item-name">Jeans Neri Slim Strappati</span>
+        <span class="item-detail">Denim nero 12oz, strappi al ginocchio, orlo sfrangiato, vita media. Brand: <em>Nudie Jeans / R13</em></span>
+      </div>
+      <span class="item-material">12oz Denim</span>
+    </li>
+    <li>
+      <span class="item-icon">🤘</span>
+      <div class="item-info">
+        <span class="item-name">Bracciale + Anello Rock Cromato</span>
+        <span class="item-detail">Bracciale wide in pelle nera con borchie, anello a teschio cromato. Brand: <em>Diesel / Werkstatt München</em></span>
+      </div>
+      <span class="item-material">Silver / Leather</span>
+    </li>
+  </ul>
+
+  <div class="tag-row">
+    <span class="tag">rock</span><span class="tag">punk</span><span class="tag">rebel</span><span class="tag">iconic</span>
+  </div>
+
+  <div class="price-row">
+    <span class="price-label">Budget stimato</span>
+    <span class="price-val">€ 350 – 800</span>
+  </div>
+</div>
+
+<!-- PANAM PALMER -->
+<div class="outfit-card card-orange">
+  <div class="card-num">04</div>
+  <div class="outfit-tag">// OUTFIT 04 — NOMAD BADLANDS</div>
+  <h2>PANAM PALMER</h2>
+  <div class="character">Ispirazione: Nomad — Badlands Desert Warrior</div>
+
+  <ul class="items-list">
+    <li>
+      <span class="item-icon">🧢</span>
+      <div class="item-info">
+        <span class="item-name">Bandana Testa + Trucker Cap</span>
+        <span class="item-detail">Bandana a fantasia geometrica bordeaux/arancio, indossata sotto un cap da camionista vissuto. Brand: <em>Patagonia / Kapital</em></span>
+      </div>
+      <span class="item-material">Cotton + Denim</span>
+    </li>
+    <li>
+      <span class="item-icon">🦺</span>
+      <div class="item-info">
+        <span class="item-name">Gilet Cargo Multi-Tasca</span>
+        <span class="item-detail">Canvas resistente cachi/sabbia, 8 tasche con zip e bottoni a pressione, rinforzi alle spalle. Brand: <em>5.11 Tactical / Carhartt</em></span>
+      </div>
+      <span class="item-material">Duck Canvas</span>
+    </li>
+    <li>
+      <span class="item-icon">👕</span>
+      <div class="item-info">
+        <span class="item-name">Crop Top Termico a Costine</span>
+        <span class="item-detail">Corto, in jersey termico arancione bruciato, manica lunga. Brand: <em>Garage / Lululemon Align</em></span>
+      </div>
+      <span class="item-material">Thermal Jersey</span>
+    </li>
+    <li>
+      <span class="item-icon">👖</span>
+      <div class="item-info">
+        <span class="item-name">Jeans Bootcut Vissuti</span>
+        <span class="item-detail">Denim indaco sbiadito, taglio bootcut, macchie di olio/polvere reali o simulate. Brand: <em>Levi's 517 / Wrangler Cowboy Cut</em></span>
+      </div>
+      <span class="item-material">14oz Raw Denim</span>
+    </li>
+    <li>
+      <span class="item-icon">🥾</span>
+      <div class="item-info">
+        <span class="item-name">Work Boot Texano</span>
+        <span class="item-detail">Stivale texano in pelle marrone consumata, punta squadrata, tacco cowboy 4cm, infilato nei jeans. Brand: <em>Ariat Heritage / Justin Boots</em></span>
+      </div>
+      <span class="item-material">Full-Grain Leather</span>
+    </li>
+  </ul>
+
+  <div class="tag-row">
+    <span class="tag">nomad</span><span class="tag">desert</span><span class="tag">workwear</span><span class="tag">americana</span>
+  </div>
+
+  <div class="price-row">
+    <span class="price-label">Budget stimato</span>
+    <span class="price-val">€ 280 – 650</span>
+  </div>
+</div>
+
+<!-- ADAM SMASHER -->
+<div class="outfit-card card-cyan">
+  <div class="card-num">05</div>
+  <div class="outfit-tag">// OUTFIT 05 — FULL CYBORG MILITECH</div>
+  <h2>ADAM SMASHER</h2>
+  <div class="character">Ispirazione: Militech Full Conversion — Armatura da combattimento</div>
+
+  <ul class="items-list">
+    <li>
+      <span class="item-icon">⚔️</span>
+      <div class="item-info">
+        <span class="item-name">Armatura Tattica Modulare</span>
+        <span class="item-detail">Gilet balistico civile MOLLE in Cordura 1000D nero, porta-piastre frontale e posteriore, fibbie rapide. Brand: <em>Condor Outdoor / 5.11 TacTec</em></span>
+      </div>
+      <span class="item-material">Cordura 1000D</span>
+    </li>
+    <li>
+      <span class="item-icon">💪</span>
+      <div class="item-info">
+        <span class="item-name">Pauldron Spalla Destra Custom</span>
+        <span class="item-detail">Costruito da cosplayer con EVA foam + Worbla termoplastico, rifinito con chrome spray. Fissato su bretella harness. Brand: <em>DIY / Worbla</em></span>
+      </div>
+      <span class="item-material">EVA + Worbla</span>
+    </li>
+    <li>
+      <span class="item-icon">🖤</span>
+      <div class="item-info">
+        <span class="item-name">Tuta Termica Base Layer</span>
+        <span class="item-detail">Body compression suit integrale nero opaco, collo alto, cuciture a contrasto grigio. Brand: <em>Under Armour HeatGear / 2XU</em></span>
+      </div>
+      <span class="item-material">Compression Poly</span>
+    </li>
+    <li>
+      <span class="item-icon">🦾</span>
+      <div class="item-info">
+        <span class="item-name">Guanti Esoscheletro (Prop)</span>
+        <span class="item-detail">Guanti tattici con proteggi-nocche hard, con overlay stampati 3D in PLA grigio metallico cromato. Brand: <em>Hatch + DIY 3D print</em></span>
+      </div>
+      <span class="item-material">Nylon + PLA 3D</span>
+    </li>
+    <li>
+      <span class="item-icon">👢</span>
+      <div class="item-info">
+        <span class="item-name">Stivale Militare Laced Alto</span>
+        <span class="item-detail">Jungle boot NATO nero, suola Vibram, gambale 25cm, 100% impermeabile. Brand: <em>Haix Black Eagle / Bates GX-8</em></span>
+      </div>
+      <span class="item-material">Full-Grain Gore-Tex</span>
+    </li>
+  </ul>
+
+  <div class="tag-row">
+    <span class="tag">military</span><span class="tag">tactical</span><span class="tag">armor</span><span class="tag">chrome</span>
+  </div>
+
+  <div class="price-row">
+    <span class="price-label">Budget stimato</span>
+    <span class="price-val">€ 420 – 1.100</span>
+  </div>
+</div>
+
+<!-- JUDY ALVAREZ -->
+<div class="outfit-card card-green">
+  <div class="card-num">06</div>
+  <div class="outfit-tag">// OUTFIT 06 — TECH ARTIST</div>
+  <h2>JUDY ALVAREZ</h2>
+  <div class="character">Ispirazione: BD Techie — Mox Sympathizer</div>
+
+  <ul class="items-list">
+    <li>
+      <span class="item-icon">🌈</span>
+      <div class="item-info">
+        <span class="item-name">Giacca Denim con Patch Neon</span>
+        <span class="item-detail">Denim oversized sbiadito, ricamata con patch fluorescenti personalizzate (fiori, farfalle, circuiti), bordi dipinti a spray. Brand: <em>Levi's Trucker customizzato / DIY</em></span>
+      </div>
+      <span class="item-material">14oz Denim + Embroidery</span>
+    </li>
+    <li>
+      <span class="item-icon">👚</span>
+      <div class="item-info">
+        <span class="item-name">Top Corto Verde Acido</span>
+        <span class="item-detail">Maglia corta crop verde lime, lavaggio acido, bordi sfrangiati, spallina scesa. Brand: <em>Urban Outfitters / Madewell</em></span>
+      </div>
+      <span class="item-material">Acid-wash Cotton</span>
+    </li>
+    <li>
+      <span class="item-icon">👖</span>
+      <div class="item-info">
+        <span class="item-name">Mom Jeans Baggy Viola</span>
+        <span class="item-detail">Taglio wide mom fit, denim violaceo o indaco scuro, vita alta, fondo largo. Brand: <em>BDG Urban Outfitters / Dr. Denim</em></span>
+      </div>
+      <span class="item-material">Stretch Denim</span>
+    </li>
+    <li>
+      <span class="item-icon">🔧</span>
+      <div class="item-info">
+        <span class="item-name">Cinturone Tool Belt Tech</span>
+        <span class="item-detail">Tool belt / utility belt in nylon con porta-attrezzi e tasche aperte. Portato in vita sulle jeans. Brand: <em>Rothco / Klein Tools</em></span>
+      </div>
+      <span class="item-material">Ballistic Nylon</span>
+    </li>
+    <li>
+      <span class="item-icon">👟</span>
+      <div class="item-info">
+        <span class="item-name">Sneaker Chunky Platform</span>
+        <span class="item-detail">Tomaia bianca con suola maxi nera 5cm, lacci colorati. Brand: <em>New Balance 1906R / HOKA Clifton</em></span>
+      </div>
+      <span class="item-material">Mesh + EVA Foam</span>
+    </li>
+  </ul>
+
+  <div class="tag-row">
+    <span class="tag">indie</span><span class="tag">tech-girl</span><span class="tag">neon</span><span class="tag">DIY patch</span>
+  </div>
+
+  <div class="price-row">
+    <span class="price-label">Budget stimato</span>
+    <span class="price-val">€ 200 – 520</span>
+  </div>
+</div>
+
+<!-- MAELSTROM / GANG -->
+<div class="outfit-card card-magenta">
+  <div class="card-num">07</div>
+  <div class="outfit-tag">// OUTFIT 07 — GANG WARFARE</div>
+  <h2>MAELSTROM CHROME</h2>
+  <div class="character">Ispirazione: Maelstrom Gang — Industrial Cyberpunk</div>
+
+  <ul class="items-list">
+    <li>
+      <span class="item-icon">💀</span>
+      <div class="item-info">
+        <span class="item-name">Maschera Industriale Modificata</span>
+        <span class="item-detail">Respiratore industriale 3M rifinito con LED rossi custom sulle valvole, verniciato opaco. Brand: <em>3M 6200 + LED mod DIY</em></span>
+      </div>
+      <span class="item-material">ABS + Silicone</span>
+    </li>
+    <li>
+      <span class="item-icon">🧥</span>
+      <div class="item-info">
+        <span class="item-name">Trench Cerato Nero con Rivetti</span>
+        <span class="item-detail">Cerato PU lucido, lunghezza midi, borchie piramidali su spalle e polsi, collo alto. Brand: <em>Killstar / Hell Bunny</em></span>
+      </div>
+      <span class="item-material">PU Wax Coat</span>
+    </li>
+    <li>
+      <span class="item-icon">⚙️</span>
+      <div class="item-info">
+        <span class="item-name">Harness Multi-Cinghia</span>
+        <span class="item-detail">Harness toracale in nylon con fibbie metalliche, portato sopra il trench o direttamente sulla pelle. Brand: <em>Bordelle / R&amp;Co</em></span>
+      </div>
+      <span class="item-material">Nylon + Steel</span>
+    </li>
+    <li>
+      <span class="item-icon">👖</span>
+      <div class="item-info">
+        <span class="item-name">Jogger Cargo Nero Riflettente</span>
+        <span class="item-detail">Pantaloni jogger con pannelli riflettenti laterali, tasche cargo, elastico fondo. Brand: <em>Nike ACG / Acronym J1A-GT</em></span>
+      </div>
+      <span class="item-material">Reflective Ripstop</span>
+    </li>
+    <li>
+      <span class="item-icon">🦿</span>
+      <div class="item-info">
+        <span class="item-name">Shin Guards Customizzate</span>
+        <span class="item-detail">Parastinchi da motocross verniciati nero opaco con dettagli magenta spray, indossati sopra i pantaloni. Brand: <em>Fox Racing Titan / EVS Sports + mod</em></span>
+      </div>
+      <span class="item-material">Hard Plastic + Paint</span>
+    </li>
+  </ul>
+
+  <div class="tag-row">
+    <span class="tag">industrial</span><span class="tag">gang</span><span class="tag">chrome</span><span class="tag">LED mod</span>
+  </div>
+
+  <div class="price-row">
+    <span class="price-label">Budget stimato</span>
+    <span class="price-val">€ 300 – 750</span>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- ACCESSORIES -->
+
+  <div class="section-label">// 02 — ACCESSORI ESSENZIALI</div>
+
+  <div class="outfit-grid">
+
+```
+<div class="outfit-card card-cyan" style="--accent:#00f5ff;">
+  <div class="card-num">ACC</div>
+  <div class="outfit-tag">// TECH WEARABLES</div>
+  <h2>CYBERWARE ACCESSORI</h2>
+  <div class="character">Da portare con qualsiasi outfit Night City</div>
+
+  <ul class="items-list">
+    <li>
+      <span class="item-icon">🔴</span>
+      <div class="item-info">
+        <span class="item-name">Occhio Cybernetic Prop (LED)</span>
+        <span class="item-detail">Sclera dipinta custom con sfumatura rossa/ciano, lente a contatto LED con alimentazione micro-USB. Brand: <em>Crazy Lens + LED contact lens</em></span>
+      </div>
+      <span class="item-material">Silicone + LED</span>
+    </li>
+    <li>
+      <span class="item-icon">📡</span>
+      <div class="item-info">
+        <span class="item-name">Sottodermico Prop Stick-On</span>
+        <span class="item-detail">Adesivo silicone 3D che simula impianti sottopelle sulla tempia/avambraccio, colorato con pigmenti a base d'acqua.</span>
+      </div>
+      <span class="item-material">Silicone Prosthetic</span>
+    </li>
+    <li>
+      <span class="item-icon">💎</span>
+      <div class="item-info">
+        <span class="item-name">Collana Dog Tag Militare</span>
+        <span class="item-detail">Doppia piastra in acciaio satinato incisa, catena in acciaio 60cm. Brand: <em>James Avery / GI Dog Tag</em></span>
+      </div>
+      <span class="item-material">Stainless Steel</span>
+    </li>
+    <li>
+      <span class="item-icon">🖤</span>
+      <div class="item-info">
+        <span class="item-name">Nail Art Circuitale Neon</span>
+        <span class="item-detail">Unghie nere lunghe con circuit-board stamped in ciano/magenta, gel semipermanente. Brand: <em>Cirque Colors / OPI Gel</em></span>
+      </div>
+      <span class="item-material">Gel Polish</span>
+    </li>
+    <li>
+      <span class="item-icon">🎒</span>
+      <div class="item-info">
+        <span class="item-name">Mini Sling Bag Tech</span>
+        <span class="item-detail">Borsetta a tracolla orizzontale in cordura nera, interno organizzato, patch modulari Velcro. Brand: <em>Topo Designs / Aer City Sling</em></span>
+      </div>
+      <span class="item-material">500D Cordura</span>
+    </li>
+  </ul>
+
+  <div class="tag-row">
+    <span class="tag">cyberware</span><span class="tag">props</span><span class="tag">accessories</span>
+  </div>
+
+  <div class="price-row">
+    <span class="price-label">Budget stimato</span>
+    <span class="price-val">€ 80 – 320</span>
+  </div>
+</div>
+
+<div class="outfit-card card-yellow" style="grid-column: span 2;">
+  <div class="card-num">HAIR</div>
+  <div class="outfit-tag">// HAIR & MAKEUP — NIGHT CITY STYLE</div>
+  <h2>GROOMING & BEAUTY CODE</h2>
+  <div class="character">Capelli, trucco e body art ispirate al gioco</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:16px;">
+    <div>
+      <div style="font-family:'Share Tech Mono';font-size:11px;letter-spacing:3px;color:var(--yellow);margin-bottom:16px;opacity:.7;">// CAPELLI</div>
+      <ul class="items-list">
+        <li>
+          <span class="item-icon">💈</span>
+          <div class="item-info">
+            <span class="item-name">Undercut con Rasato Laterale</span>
+            <span class="item-detail">Lati rasati 0-1, top voluminoso texturizzato, colore naturale o tinto in nero corvino / biondo platino.</span>
+          </div>
+        </li>
+        <li>
+          <span class="item-icon">🎨</span>
+          <div class="item-info">
+            <span class="item-name">Bleach + Color Block Neon</span>
+            <span class="item-detail">Decolorazione completa o parziale, applicazione di colore diretto: ciano, magenta, arancio metallizzato. Brand colore: <em>Manic Panic / Arctic Fox</em></span>
+          </div>
+        </li>
+        <li>
+          <span class="item-icon">✨</span>
+          <div class="item-info">
+            <span class="item-name">Braids + Cyber Rings</span>
+            <span class="item-detail">Trecce strette con anelli metallici intercalati ogni 3-4cm, colore naturale o bicolor.</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-family:'Share Tech Mono';font-size:11px;letter-spacing:3px;color:var(--yellow);margin-bottom:16px;opacity:.7;">// MAKEUP & TATTOO</div>
+      <ul class="items-list">
+        <li>
+          <span class="item-icon">👁️</span>
+          <div class="item-info">
+            <span class="item-name">Eyeliner Geometrico Grafico</span>
+            <span class="item-detail">Liner nero preciso con estensioni geometriche agli angoli, ombretto ciano o viola metallizzato. Brand: <em>NYX Epic Ink / Urban Decay</em></span>
+          </div>
+        </li>
+        <li>
+          <span class="item-icon">🌡️</span>
+          <div class="item-info">
+            <span class="item-name">Face Tattoo Temporaneo</span>
+            <span class="item-detail">Tatuaggi temporanei linee fini geometriche o circuitali sulla tempia/zigomo. Durata 1 settimana.</span>
+          </div>
+        </li>
+        <li>
+          <span class="item-icon">💄</span>
+          <div class="item-info">
+            <span class="item-name">Labbra Scure + Gloss Chrome</span>
+            <span class="item-detail">Base labbra bordeaux scuro, top coat gloss argento cromato. Brand: <em>MAC Diva + Chrome gloss</em></span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="price-row">
+    <span class="price-label">Budget stimato setup completo</span>
+    <span class="price-val">€ 60 – 200</span>
+  </div>
+</div>
+```
+
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-logo">NIGHT CITY WEARABLES — REAL WORLD EDITION</div>
+  <div class="footer-sub">// TUTTI I BRAND CITATI SONO REALI E ACQUISTABILI //</div>
+  <div class="footer-sub" style="margin-top:6px;font-size:9px;">Ispirato a Cyberpunk 2077 © CD Projekt RED — Fan Fashion Project</div>
+</footer>
+
+</body>
+</html>
